@@ -20,10 +20,11 @@ path you'd like the someproj directory to be created in.
     (when (null file-name)
       (error "Current buffer is not associated with a file"))
     (let ((project-dir (find-git-dir file-name)))
-      (message "Calling rsync -avC --exclude '.git' %s %s"
+      (message "Calling rsync -avC --delete --exclude '.git' %s %s"
                                   (shell-quote-argument project-dir)
                                   (shell-quote-argument destination))
-      (call-process-shell-command "rsync" nil nil nil "-avC --exclude '.git'"
+      (call-process-shell-command "rsync" nil nil nil
+                                  "-avC" "--delete" "--exclude '.git'"
                                   (shell-quote-argument project-dir)
                                   (shell-quote-argument destination))
       (message nil))))
