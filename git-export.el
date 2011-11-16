@@ -15,7 +15,13 @@ Note that the trailing slash is removed from the directory before
 it is given to rsync, so DESTINATION only needs to specify the
 path you'd like the someproj directory to be created in.
 "
-  (interactive "sdestination: ")
+  (interactive
+   (list (completing-read "destination: " git-export-dest-hist nil nil
+                          (car git-export-dest-hist) 'git-export-dest-hist
+                          nil nil)))
+  (unless destination
+    (error "No destination given"))
+  (push destination git-export-dest-hist)
   (let ((file-name (buffer-file-name (current-buffer))))
     (when (null file-name)
       (error "Current buffer is not associated with a file"))
@@ -28,6 +34,9 @@ path you'd like the someproj directory to be created in.
                                   (shell-quote-argument project-dir)
                                   (shell-quote-argument destination))
       (message nil))))
+
+(defvar git-export-dest-hist ()
+  "A history list containing destinations supplied to git-export.")
 
 (defun find-git-dir (dir)
   (if (not (file-directory-p dir)) (find-git-dir (file-name-directory dir))
